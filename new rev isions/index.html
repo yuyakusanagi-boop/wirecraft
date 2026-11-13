@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#050812" />
+  <meta name="description" content="Wirecraft is an online and offline neon circuit-building puzzle game." />
+  <title>WIRECRAFT</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <audio id="loading-screen-track" src="images/opening_audio.mp3" preload="auto" loop></audio>
+  <audio id="background-music-track" src="images/wirecraft-dark-ambient.wav" preload="auto" loop></audio>
+  <div id="loading-screen" class="screen">
+    <div class="loading-screen-art">
+      <img src="images/LOADING.jpg" alt="Wirecraft welcome screen. Learn, connect, and have fun while discovering the basics of electrical wiring." />
+      <button id="launch-verification" class="launch-verification" type="button" aria-label="Press Enter to start">PRESS ENTER TO START</button>
+    </div>
+  </div>
+
+  <div id="home-screen" class="screen" aria-hidden="false">
+    <img class="home-character" src="images/killua-left.png" alt="" aria-hidden="true" />
+    <img class="home-character home-character--right" src="images/killua-right.png" alt="" aria-hidden="true" />
+    <header id="header">
+      <div class="player-identity">
+        <div id="player-name-display" class="player-name" aria-live="polite"></div>
+        <button id="change-name" class="secondary" type="button">Change name</button>
+      </div>
+    </header>
+
+    <h1 id="app-title"></h1>
+
+    <main id="main-area">
+      <section id="name-entry" class="card">
+        <input type="text" id="player-name-input" maxlength="24" autocomplete="nickname" placeholder="Enter your name" aria-label="Player name" />
+        <button id="submit-name" class="primary">Submit</button>
+      </section>
+      <button class="btn home-menu-btn" id="story-btn">Story Mode</button>
+      <button class="btn home-menu-btn" id="casual-btn">Circuit Modes</button>
+      <button class="btn home-menu-btn" id="exit-btn">Exit</button>
+    </main>
+    
+    <button id="stats-btn" class="secondary" type="button">Player stats</button>
+    <button id="leaderboard-btn" class="secondary" type="button">Leaderboards</button>
+    <button id="account-btn" class="secondary" type="button">Account</button>
+    <button id="info-btn" class="info" aria-label="Information">i</button>
+    <button id="home-sound-toggle" class="sound-toggle" type="button" aria-label="Mute sound">🔊</button>
+  </div>
+
+  <div id="modes-screen" class="screen" aria-hidden="true">
+    <img class="mode-screen-bg" src="images/circuitmodes-bg.jpg" alt="" aria-hidden="true" />
+    <button class="btn selection-back" id="modes-back" type="button">Back</button>
+    <h1 id="modes-title">Circuit Modes</h1>
+    <main id="mode-buttons" class="card" aria-label="Circuit game modes">
+      <button class="btn mode-card" id="practice-mode" type="button"><b>PRACTICE LAB</b><span>Replay unlocked circuits with hints and no pressure.</span></button>
+      <button class="btn mode-card" id="rush-mode" type="button"><b>POWER RUSH</b><span>Clear a circuit before the power reserve drains.</span></button>
+      <button class="btn mode-card" id="endless-mode" type="button"><b>ENDLESS GRID</b><span>Keep repairing increasingly complex circuits. One failed run ends the streak.</span></button>
+    </main>
+  </div>
+
+  <div id="stats-screen" class="screen" aria-hidden="true">
+    <div class="stats-screen-header">
+      <div class="brand">WIRE<span>CRAFT</span></div>
+      <button id="stats-back" class="btn secondary" type="button">Back to menu</button>
+    </div>
+    <main class="stats-card" aria-labelledby="stats-title">
+      <h1 id="stats-title">PLAYER RECORD</h1>
+      <p id="stats-player-name" class="stats-player-name"></p>
+      <div id="stats-grid" class="stats-grid"></div>
+      <button id="mode-stats-open" class="btn primary stats-page-link" type="button">Circuit mode record →</button>
+    </main>
+  </div>
+
+  <div id="mode-stats-screen" class="screen" aria-hidden="true">
+    <div class="stats-screen-header">
+      <div class="brand">WIRE<span>CRAFT</span></div>
+      <button id="mode-stats-back" class="btn secondary" type="button">Back to player record</button>
+    </div>
+    <main class="stats-card" aria-labelledby="mode-stats-title">
+      <h1 id="mode-stats-title">CIRCUIT MODE RECORD</h1>
+      <p id="mode-stats-player-name" class="stats-player-name"></p>
+      <p class="mode-stats-intro">Your completed circuits, fastest repairs, and longest Endless Grid streaks.</p>
+      <div id="mode-stats-grid" class="stats-grid"></div>
+    </main>
+  </div>
+
+  <div id="account-screen" class="screen" aria-hidden="true">
+    <div class="stats-screen-header">
+      <div class="brand">WIRE<span>CRAFT</span></div>
+      <button id="account-back" class="btn secondary" type="button">Back to menu</button>
+    </div>
+    <main class="stats-card account-card" aria-labelledby="account-title">
+      <h1 id="account-title">PLAYER ACCOUNT</h1>
+      <p id="account-session" class="stats-player-name">Not signed in</p>
+      <p id="account-status" class="account-status" role="status" aria-live="polite"></p>
+      <label for="account-display-name">Player name</label>
+      <input id="account-display-name" type="text" maxlength="24" autocomplete="nickname" placeholder="Choose a public player name" />
+      <label for="account-email">Email</label>
+      <input id="account-email" type="email" autocomplete="email" placeholder="you@example.com" />
+      <label for="account-password">Password</label>
+      <input id="account-password" type="password" minlength="8" autocomplete="current-password" placeholder="At least 8 characters" />
+      <div class="account-actions">
+        <button id="account-signup" class="btn primary" type="button">Create account</button>
+        <button id="account-signin" class="btn" type="button">Sign in</button>
+        <button id="account-signout" class="btn secondary" type="button" hidden>Sign out</button>
+        <button id="account-export-save" class="btn secondary" type="button">Export save</button>
+        <button id="account-import-save" class="btn secondary" type="button">Import save</button>
+        <button id="account-reset-save" class="btn danger" type="button">Reset local save</button>
+      </div>
+      <p class="account-security-note">Passwords are handled by Supabase Auth and are never saved in this game. Your saved player record syncs when signed in.</p>
+      <p class="account-security-note">Email confirmation is currently disabled so new accounts can sign in immediately. Use an email address you control; enable confirmation after configuring a reliable SMTP sender.</p>
+    </main>
+  </div>
+
+  <div id="leaderboard-screen" class="screen" aria-hidden="true">
+    <div class="stats-screen-header">
+      <div class="brand">WIRE<span>CRAFT</span></div>
+      <button id="leaderboard-back" class="btn secondary" type="button">Back to menu</button>
+    </div>
+    <main class="stats-card leaderboard-card" aria-labelledby="leaderboard-title">
+      <h1 id="leaderboard-title">GLOBAL LEADERBOARD</h1>
+      <p id="leaderboard-status" class="account-status" role="status" aria-live="polite"></p>
+      <div class="leaderboard-tabs" role="group" aria-label="Leaderboard mode">
+        <button class="btn leaderboard-tab is-active" data-leaderboard-mode="overall" type="button" aria-pressed="true">Overall</button>
+        <button class="btn leaderboard-tab" data-leaderboard-mode="story" type="button" aria-pressed="false">Story</button>
+        <button class="btn leaderboard-tab" data-leaderboard-mode="practice" type="button" aria-pressed="false">Practice</button>
+        <button class="btn leaderboard-tab" data-leaderboard-mode="rush" type="button" aria-pressed="false">Power Rush</button>
+        <button class="btn leaderboard-tab" data-leaderboard-mode="endless" type="button" aria-pressed="false">Endless</button>
+      </div>
+      <div class="leaderboard-tabs leaderboard-source-tabs" role="group" aria-label="Score verification">
+        <button class="btn leaderboard-source-tab is-active" data-leaderboard-source="verified" type="button" aria-pressed="true">Verified</button>
+        <button class="btn leaderboard-source-tab" data-leaderboard-source="unverified" type="button" aria-pressed="false">Unverified · player-reported</button>
+      </div>
+      <p id="leaderboard-source-note" class="account-security-note">Verified scores require a server-validated circuit solution. Each mode and level counts once per UTC day; old totals stay player-reported.</p>
+      <div id="leaderboard-content" class="leaderboard-content"></div>
+      <p class="account-security-note">Player-reported scores are shown separately and do not affect verified rankings. Overall ranks combine completed circuits; Endless Grid streak breaks ties.</p>
+    </main>
+  </div>
+
+  <div id="info-screen" class="screen" aria-hidden="true">
+    <div class="stats-screen-header dev-cv-nav">
+      <div class="brand">WIRE<span>CRAFT</span></div>
+      <button id="info-back" class="btn secondary" type="button">Back to menu</button>
+    </div>
+    <main class="dev-cv-page" aria-labelledby="info-title">
+      <header class="dev-cv-hero">
+        <div class="dev-cv-hero-copy">
+          <p class="dev-eyebrow">WIRECRAFT / PERSONNEL ARCHIVE / ACCESS LEVEL 01</p>
+          <h1 id="info-title">MEET THE CREW<span>FIVE MINDS. ONE LIVE CIRCUIT.</span></h1>
+          <p class="dev-cv-intro">A sophomore crew building a lightning-fast circuit puzzle with neon cyberpunk energy and an electric spark inspired by Killua Zoldyck from Hunter x Hunter.</p>
+          <p class="dev-cv-count">TEAM CONFIGURATION <b>02 WOMEN</b><i> / </i><b>03 MEN</b><i> / </i><b>ALL SOPHOMORES</b></p>
+        </div>
+        <div class="dev-cv-stamp" aria-hidden="true"><b>05</b><span>ACTIVE<br>OPERATORS</span><i>W/C</i></div>
+      </header>
+
+      <section class="dev-team-ledger" aria-label="Developer curriculum vitae">
+        <article class="dev-profile" aria-labelledby="dev-01-name">
+          <header class="dev-profile-heading"><p class="dev-file-index">PERSONNEL FILE // 01</p><h2 id="dev-01-name">LORENZ GUTIERREZ</h2><p class="dev-role">LEAD WEB DEVELOPER</p></header>
+          <div class="dev-profile-layout">
+            <aside class="dev-profile-side"><div class="dev-photo-slot" role="img" aria-label="Full-body portrait of developer 1"><img class="dev-fullbody-photo" src="images/kaito.png" alt="" aria-hidden="true" draggable="false"><span>TRANSPARENT FULL-BODY PNG</span><b>PHOTO SLOT<br>01</b><small>HOVER / PRESS TO REVEAL DATA</small></div></aside>
+            <div class="dev-profile-content">
+              <dl class="dev-biodata"><div><dt>Identity</dt><dd>Man</dd></div><div><dt>Academic year</dt><dd>Sophomore</dd></div><div><dt>Program</dt><dd>[BIT/ Computer Technology]</dd></div><div><dt>Contact</dt><dd>[lorenzcgutierrez@slsu.edu.ph]</dd></div></dl>
+              <section class="dev-cv-section"><h3>01 / PROFILE</h3><p>Hi, The name is Lorenz, currently a sophomore student  on BINDTECH CPT program. A curious guy that doesnt stop until he gets what he wants, in a good way. He is eager to grow and discover more about the current and future technologyas a  future web and game developer. </p></section>
+              <div class="dev-cv-columns"><section class="dev-cv-section"><h3>02 / EDUCATION</h3><p>Southern Luzon State University-Bachelor  In Industrial Technology</p><p>Nabangka National Highschool- General Academic Strand</p></section><section class="dev-cv-section"><h3>03 / CREDENTIALS</h3><p>NC II APR</p><p>RESEARCH AWARDEE • COC OAP • OFFICE SUITE LITERACY</p></section></div>
+              <section class="dev-cv-section"><h3>04 / SELECTED WORK</h3><p>WIRECRAFT //Lead Programmer and FrontEnd Developer</p><p>VB6 Slot Machines and Mini Games </p></section>
+              <section class="dev-cv-section"><h3>05 / TOOLKIT</h3><ul class="dev-skill-list"><li>Basic Computer Skills</li><li>Visual Basic 6</li><li>frontEnd Development</li><li>Video Editing<li><li>Leadership<li></ul></section>
+            </div>
+          </div>
+        </article>
+        <article class="dev-profile" aria-labelledby="dev-02-name">
+          <header class="dev-profile-heading"><p class="dev-file-index">PERSONNEL FILE // 02</p><h2 id="dev-02-name">SARAH C. BALACA</h2><p class="dev-role">2ND YEAR BINDTECH STUDENT</p></header>
+          <div class="dev-profile-layout">
+            <aside class="dev-profile-side"><div class="dev-photo-slot" role="img" aria-label="Full-body portrait of developer 2"><img class="dev-fullbody-photo" src="images/sarah.png" alt="" aria-hidden="true" draggable="false"><span>TRANSPARENT FULL-BODY PNG</span><b>PHOTO SLOT<br>02</b><small>HOVER / PRESS TO REVEAL DATA</small></div></aside>
+            <div class="dev-profile-content">
+              <dl class="dev-biodata"><div><dt>Identity</dt><dd>Woman</dd></div><div><dt>Academic year</dt><dd>Sophomore</dd></div><div><dt>Program</dt><dd>Bachelor in Industrial Technology / SLSU Gumaca</dd></div><div><dt>Contact</dt><dd>sarahcbalaca@slsu.edu.ph</dd></div></dl>
+              <section class="dev-cv-section"><h3>01 / PROFILE</h3><p>Hi! I'm Sarah, a 2nd year BINDTECH student who is passionate about learning technology, programming, and improving my skills.</p><p>I enjoy creating projects that help solve real-life problems and continuously grow as a future developer.</p></section>
+              <div class="dev-cv-columns"><section class="dev-cv-section"><h3>02 / EDUCATION</h3><p>Southern Luzon State University, Gumaca Campus — Bachelor in Industrial Technology</p><p>Guinayangan, Quezon — 2nd year student</p></section><section class="dev-cv-section"><h3>03 / CREDENTIALS</h3><p>Basic Computer Skills</p><p>Visual Basic 6 • Communication • Teamwork • Problem Solving</p></section></div>
+              <section class="dev-cv-section"><h3>04 / SELECTED WORK</h3><p>WIRECRAFT // Personal portfolio profile and digital showcase</p><p>Portfolio work focused on personal branding, technical interest, and skills presentation.</p></section>
+              <section class="dev-cv-section"><h3>05 / TOOLKIT</h3><ul class="dev-skill-list"><li>Basic Computer Skills</li><li>Visual Basic 6</li><li>Communication</li><li>Teamwork</li><li>Problem Solving</li><li>Creativity</li></ul></section>
+            </div>
+          </div>
+        </article>
+        <article class="dev-profile" aria-labelledby="dev-03-name">
+          <header class="dev-profile-heading"><p class="dev-file-index">PERSONNEL FILE // 03</p><h2 id="dev-03-name">MARK VINCENT LUBIANO</h2><p class="dev-role">GOOD STUDENT / WORKING STUDENT</p></header>
+          <div class="dev-profile-layout">
+            <aside class="dev-profile-side"><div class="dev-photo-slot" role="img" aria-label="Portrait of Mark Vincent Lubiano holding a camera"><img class="dev-fullbody-photo" src="images/mark.png" data-photo-file="images/mark-photography.jpg" alt="" aria-hidden="true" draggable="false"><span>PORTRAIT PHOTO</span><b>PHOTO SLOT<br>03</b><small>HOVER / PRESS TO REVEAL DATA</small></div></aside>
+            <div class="dev-profile-content">
+              <dl class="dev-biodata"><div><dt>Identity</dt><dd>Man</dd></div><div><dt>Academic year</dt><dd>Sophomore</dd></div><div><dt>Program</dt><dd>Bachelor in Industrial Technology / SLSU Gumaca</dd></div><div><dt>Contact</dt><dd>markvlubiano@slsu.edu.com</dd></div></dl>
+              <section class="dev-cv-section"><h3>01 / PROFILE</h3><p>Mark is a student from Gumaca, Quezon, studying at Southern Luzon State University. He is curious, enjoys learning, and is working to grow his skills in technology and creative media.</p><p>Outside school, he enjoys photography, video games, music, motorcycles, cooking, anime, and fixing things.</p></section>
+              <div class="dev-cv-columns"><section class="dev-cv-section"><h3>02 / EDUCATION</h3><p>Southern Luzon State University, Gumaca Campus — Bachelor in Industrial Technology</p><p>Gumaca National High School — HUMSS, graduated 2025</p></section><section class="dev-cv-section"><h3>03 / EXPERIENCE &amp; SKILLS</h3><p>Photo and video editing; computer hardware assembly and repair.</p><p>Working student with a practical, hands-on approach to learning.</p></section></div>
+              <section class="dev-cv-section"><h3>04 / INTERESTS</h3><p>WIRECRAFT // Team member on a collaborative circuit-puzzle project.</p><p>Photography and printer-shop work; delivery, buy-and-sell, cooking, and anime.</p></section>
+              <section class="dev-cv-section"><h3>05 / TOOLKIT</h3><ul class="dev-skill-list"><li>Communication</li><li>Photo Editing</li><li>Video Editing</li><li>Hardware Assembly</li><li>Computer Repair</li><li>Photography</li></ul></section>
+            </div>
+          </div>
+        </article>
+        <article class="dev-profile" aria-labelledby="dev-04-name">
+          <header class="dev-profile-heading"><p class="dev-file-index">PERSONNEL FILE // 04</p><h2 id="dev-04-name">JEAN ANN ALDAY</h2><p class="dev-role">STUDENT DEVELOPER / CREATIVE THINKER</p></header>
+          <div class="dev-profile-layout">
+            <aside class="dev-profile-side"><div class="dev-photo-slot" role="img" aria-label="Full-body transparent photo slot for developer 4"><img class="dev-fullbody-photo" src="images/jean.png" data-photo-file="images/jean.png" alt="" aria-hidden="true" draggable="false"><span>TRANSPARENT FULL-BODY PNG</span><b>PHOTO SLOT<br>04</b><small>HOVER / PRESS TO REVEAL DATA</small></div></aside>
+            <div class="dev-profile-content">
+              <dl class="dev-biodata"><div><dt>Identity</dt><dd>Woman</dd></div><div><dt>Academic year</dt><dd>Sophomore</dd></div><div><dt>Program</dt><dd>BIT-CPT / SLSU Gumaca</dd></div><div><dt>Contact</dt><dd>facebook.com/jeanannalday</dd></div></dl>
+              <section class="dev-cv-section"><h3>01 / PROFILE</h3><p>I am a hardworking, responsible, and motivated college student who values education, family, and faith. I always strive to learn, improve, and achieve my goals while working toward a successful future.</p></section>
+              <div class="dev-cv-columns"><section class="dev-cv-section"><h3>02 / EDUCATION</h3><p>Southern Luzon State University (SLSU) Gumaca Campus</p><p>BIT-CPT • 2nd Year Student</p></section><section class="dev-cv-section"><h3>03 / CREDENTIALS</h3><p>Former Secretary and Class Auditor in high school and senior high school</p><p>Former Class Treasurer, Muse, PIO, and PO</p></section></div>
+              <section class="dev-cv-section"><h3>04 / SELECTED WORK</h3><p>WIRECRAFT // Personal portfolio profile and public-facing brand builder</p><p>Portfolio work focused on education, creativity, and digital storytelling.</p></section>
+              <section class="dev-cv-section"><h3>05 / TOOLKIT</h3><ul class="dev-skill-list"><li>Time Management</li><li>Responsibility</li><li>Critical Thinking</li><li>Leadership</li><li>Volleyball</li><li>Cooking</li></ul></section>
+            </div>
+          </div>
+        </article>
+        <article class="dev-profile" aria-labelledby="dev-05-name">
+          <header class="dev-profile-heading"><p class="dev-file-index">PERSONNEL FILE // 05</p><h2 id="dev-05-name">JANMER S. MIPERAQUE</h2><p class="dev-role">STUDENT DEVELOPER / FUTURE FIREFIGHTER</p></header>
+          <div class="dev-profile-layout">
+            <aside class="dev-profile-side"><div class="dev-photo-slot" role="img" aria-label="Full-body transparent photo slot for developer 5"><img class="dev-fullbody-photo" src="images/janmer.png" data-photo-file="images/dev-05-fullbody.png" alt="" aria-hidden="true" draggable="false"><span>TRANSPARENT FULL-BODY PNG</span><b>PHOTO SLOT<br>05</b><small>HOVER / PRESS TO REVEAL DATA</small></div></aside>
+            <div class="dev-profile-content">
+              <dl class="dev-biodata"><div><dt>Identity</dt><dd>Man</dd></div><div><dt>Academic year</dt><dd>Sophomore</dd></div><div><dt>Program</dt><dd>BIT-CPT02 / SLSU Gumaca</dd></div><div><dt>Contact</dt><dd>janmermiperaque0@gmail.com</dd></div></dl>
+              <section class="dev-cv-section"><h3>01 / PROFILE</h3><p>I am Janmer S. Miperaque, a college student from Gumaca, Quezon, currently pursuing a Bachelor in Industrial Technology major in Computer Technology at Southern Luzon State University. I enjoy learning, exploring technology, and improving my skills through practical experience and creative work.</p></section>
+              <div class="dev-cv-columns"><section class="dev-cv-section"><h3>02 / EDUCATION</h3><p>Southern Luzon State University (SLSU) Gumaca Campus</p><p>BIT-CPT02 • 2nd Year Student</p></section><section class="dev-cv-section"><h3>03 / CREDENTIALS</h3><p>Basic Photo and Video Editing</p><p>Basic Programming • Welding • Cooking</p></section></div>
+              <section class="dev-cv-section"><h3>04 / SELECTED WORK</h3><p>WIRECRAFT // Personal portfolio profile and creative digital branding</p><p>Focused on personal identity, presentation, technology interest, and skill showcase.</p></section>
+              <section class="dev-cv-section"><h3>05 / TOOLKIT</h3><ul class="dev-skill-list"><li>Photo Editing</li><li>Video Editing</li><li>Basic Programming</li><li>Welding</li><li>Cooking</li><li>Adaptability</li></ul></section>
+            </div>
+          </div>
+        </article>
+      </section>
+      <section class="dev-special-mentions" aria-labelledby="special-mentions-title">
+        <header class="dev-special-mentions-heading">
+          <p class="dev-eyebrow">WITH GRATITUDE / GUIDANCE THAT POWERED THE PROJECT</p>
+          <h2 id="special-mentions-title">SPECIAL MENTION</h2>
+          <p>Teachers who served as pillars and guides throughout the creation of WIRECRAFT.</p>
+        </header>
+        <div class="dev-special-mentions-grid">
+          <article class="dev-special-mention">
+            <p class="dev-file-index">PILLAR // 01</p>
+            <h3>IAN TITUS RAMONES</h3>
+            <p class="dev-special-mention-role">BIT DEPARTMENT HEAD</p>
+          </article>
+          <article class="dev-special-mention">
+            <p class="dev-file-index">GUIDE // 02</p>
+            <h3>RENIER JORDAN</h3>
+            <p class="dev-special-mention-role">SUBJECT TEACHER</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="difficulty-screen" class="screen" aria-hidden="true">
+    <canvas id="difficulty-lightning-canvas" aria-hidden="true"></canvas>
+    <button class="btn selection-back" id="difficulty-back" type="button">Back</button>
+    <img id="difficulty-title" src="images/DIFFICULTY.png" alt="Choose difficulty" />
+    <main id="difficulty-buttons">
+      <div class="difficulty-option">
+        <img class="difficulty-image" id="beginner-btn" src="images/EASY.png" alt="Easy difficulty" tabindex="0" />
+      </div>
+      <div class="difficulty-option">
+        <img class="difficulty-image" id="pro-btn" src="images/PRO.png" alt="Pro difficulty" tabindex="0" />
+      </div>
+      <div class="difficulty-option">
+        <img class="difficulty-image" id="expert-btn" src="images/VETERAN.png" alt="Veteran difficulty" tabindex="0" />
+      </div>
+    </main>
+  </div>
+
+  <div id="beginner-levels" class="screen level-screen" aria-hidden="true">
+    <h1>beginner levels</h1>
+    <main class="level-map" aria-label="Beginner level map">
+      <svg class="level-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path class="wire-route wire-shadow" d="M 6 85 H 16 V 72 H 28 V 85 H 40 V 75 H 53 V 56 H 46 V 39 H 35 V 22 H 50 V 13 H 68 V 24 H 90 V 8" transform="translate(0.7,0.7)" />
+        <path class="wire-route wire-accent" d="M 6 85 H 16 V 72 H 28 V 85 H 40 V 75 H 53 V 56 H 46 V 39 H 35 V 22 H 50 V 13 H 68 V 24 H 90 V 8" transform="translate(-0.6,0.6)" />
+        <path class="wire-route wire-main" d="M 6 85 H 16 V 72 H 28 V 85 H 40 V 75 H 53 V 56 H 46 V 39 H 35 V 22 H 50 V 13 H 68 V 24 H 90 V 8" />
+        <circle class="wire-end" cx="90" cy="8" r="2.4" />
+      </svg>
+      <img class="map-character" src="images/killua-chibi-map.png" alt="Player character" aria-hidden="true" />
+      <button class="btn level-btn">Level 1</button><button class="btn level-btn">Level 2</button>
+      <button class="btn level-btn">Level 3</button><button class="btn level-btn">Level 4</button>
+      <button class="btn level-btn">Level 5</button><button class="btn level-btn">Level 6</button>
+      <button class="btn level-btn">Level 7</button><button class="btn level-btn">Level 8</button>
+      <button class="btn level-btn">Level 9</button><button class="btn level-btn">Level 10</button>
+      <button class="btn selection-back map-exit" id="beginner-back" type="button" aria-label="Exit to difficulty selection">Exit</button>
+    </main>
+  </div>
+
+  <div id="pro-levels" class="screen level-screen" aria-hidden="true">
+    <h1>Pro levels</h1>
+    <main class="level-map" aria-label="Pro level map">
+      <svg class="level-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path class="wire-route wire-shadow" d="M 6 85 H 16 V 72 H 28 V 85 H 40 V 75 H 53 V 56 H 46 V 39 H 35 V 22 H 50 V 13 H 68 V 24 H 90 V 8" transform="translate(0.7,0.7)" />
+        <path class="wire-route wire-accent" d="M 6 85 H 16 V 72 H 28 V 85 H 40 V 75 H 53 V 56 H 46 V 39 H 35 V 22 H 50 V 13 H 68 V 24 H 90 V 8" transform="translate(-0.6,0.6)" />
+        <path class="wire-route wire-main" d="M 6 85 H 16 V 72 H 28 V 85 H 40 V 75 H 53 V 56 H 46 V 39 H 35 V 22 H 50 V 13 H 68 V 24 H 90 V 8" />
+        <circle class="wire-end" cx="90" cy="8" r="2.4" />
+      </svg>
+      <img class="map-character" src="images/killua-chibi-map.png" alt="Player character" aria-hidden="true" />
+      <button class="btn level-btn">Level 1</button><button class="btn level-btn">Level 2</button>
+      <button class="btn level-btn">Level 3</button><button class="btn level-btn">Level 4</button>
+      <button class="btn level-btn">Level 5</button><button class="btn level-btn">Level 6</button>
+      <button class="btn level-btn">Level 7</button><button class="btn level-btn">Level 8</button>
+      <button class="btn level-btn">Level 9</button><button class="btn level-btn">Level 10</button>
+      <button class="btn selection-back map-exit" id="pro-back" type="button" aria-label="Exit to difficulty selection">Exit</button>
+    </main>
+  </div>
+
+  <div id="expert-levels" class="screen level-screen" aria-hidden="true">
+    <h1>Expert levels</h1>
+    <main class="level-map" aria-label="Expert level map">
+      <svg class="level-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path class="wire-route wire-shadow" d="M 6 85 H 16 V 72 H 28 V 85 H 40 V 75 H 53 V 56 H 46 V 39 H 35 V 22 H 50 V 13 H 68 V 24 H 90 V 8" transform="translate(0.7,0.7)" />
+        <path class="wire-route wire-accent" d="M 6 85 H 16 V 72 H 28 V 85 H 40 V 75 H 53 V 56 H 46 V 39 H 35 V 22 H 50 V 13 H 68 V 24 H 90 V 8" transform="translate(-0.6,0.6)" />
+        <path class="wire-route wire-main" d="M 6 85 H 16 V 72 H 28 V 85 H 40 V 75 H 53 V 56 H 46 V 39 H 35 V 22 H 50 V 13 H 68 V 24 H 90 V 8" />
+        <circle class="wire-end" cx="90" cy="8" r="2.4" />
+      </svg>
+      <img class="map-character" src="images/killua-chibi-map.png" alt="Player character" aria-hidden="true" />
+      <button class="btn level-btn">Level 1</button>
+      <button class="btn level-btn">Level 2</button>
+      <button class="btn level-btn">Level 3</button>
+      <button class="btn level-btn">Level 4</button>
+      <button class="btn level-btn">Level 5</button>
+      <button class="btn level-btn">Level 6</button>
+      <button class="btn level-btn">Level 7</button>
+      <button class="btn level-btn">Level 8</button>
+      <button class="btn level-btn">Level 9</button>
+      <button class="btn level-btn">Level 10</button>
+      <button class="btn selection-back map-exit" id="expert-back" type="button" aria-label="Exit to difficulty selection">Exit</button>
+    </main>
+  </div>
+
+  <div id="game-shell" class="screen game-shell" aria-hidden="true">
+    <div id="app">
+      <header>
+        <div class="brand">WIRE<span>CRAFT</span></div>
+        <div class="header-note">ONLINE &amp; OFFLINE • Mouse/touch supported • Drag parts to organize your workbench</div>
+        <div class="game-topbar">
+          <button id="return-level-map" class="btn secondary" type="button">Return to level map</button>
+          <button id="back-home" class="btn secondary" type="button">Back to menu</button>
+        </div>
+      </header>
+      <div id="game">
+        <div id="board">
+          <svg id="wires" preserveAspectRatio="none"><g id="wireLayer"></g><path id="wirePreview"/></svg>
+        </div>
+        <aside id="side">
+          <h2>⚡ Circuit panel</h2>
+          <div id="levelBar">
+            <div class="levelTitle" id="levelName">LEVEL 1 — FIRST CIRCUIT</div>
+            <div id="modeReadout" class="mode-readout">STORY MODE</div>
+            <div class="progress"><div id="progress"></div></div>
+            <div id="hint">Connect every required terminal in a valid circuit.</div>
+          </div>
+          <div id="objective">Use exactly 1 bulb and 1 switch. Build a valid DC circuit: source (+) → loads/switches → source (−). Green switch terminals are neutral and can become + or −.</div>
+          <div id="topology" style="margin-top:10px;padding:8px 10px;border-radius:10px;background:#0a1728;border:1px solid #223a59;font-size:11px;color:#8ea6c4">TOPOLOGY: <b>OPEN</b></div><div id="status">Positive (+) and negative (−) are polarized. Switch terminals are neutral: their polarity is learned from the first polarized connection. Series and parallel paths are electrically evaluated, not just visually labeled. Click terminals to wire; drag components to organize the board.</div>
+          <div style="display:flex;gap:12px;margin-top:10px;font-size:10px;color:#91a5c3"><span><b style="color:#ff6579">● +</b> POSITIVE</span><span><b style="color:#69a8ff">● −</b> NEGATIVE</span><span><b style="color:#35e38a">● N</b> SWITCH NEUTRAL</span></div>
+          <div class="controls">
+            <button class="btn primary" id="check">CHECK CIRCUIT</button>
+            <button class="btn" id="undo" title="Undo last wire (U)">UNDO</button>
+            <button class="btn" id="hint-btn" title="Show a topology hint (H)">HINT</button>
+            <button class="btn" id="reset">RESET</button>
+            <button class="btn danger" id="clear">CLEAR WIRES</button>
+            <button class="btn sound-toggle" id="sound-toggle" title="Sound on — click to mute">🔊</button>
+          </div>
+        </aside>
+        <div id="toast"></div>
+        <footer id="footer" style="background: transparent; border-top: none; box-shadow: none;">
+          <div class="game-progress">
+            <div class="game-progress-heading">
+              <span>CURRENT LEVEL // LIVE CIRCUIT</span>
+              <span id="gameProgressLabel">0 / 1 LOADS POWERED · 0%</span>
+            </div>
+            <div id="gameProgressTrack" class="game-progress-track" role="progressbar" aria-label="Current level circuit progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0% of current level loads powered">
+              <div id="gameProgress"></div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="pill" style="background: transparent;">LEVEL <b id="levelNo">1</b> / 30</div>
+            <div class="pill" style="background: transparent;">MOVES <b id="moves">0</b></div>
+            <div class="pill" style="background: transparent;">BEST <b id="best">—</b></div>
+            <div class="pill" style="background: transparent;">TIME <b id="levelTime">00:00</b></div>
+            <div class="pill" style="background: transparent;" id="reservePill">RESERVE <b id="powerReserve">—</b></div>
+            <div class="pill" style="background: transparent;" id="streakPill">STREAK <b id="streak">0</b></div>
+            <div class="pill" style="background: transparent;">RUNTIME <b id="runtime">00:00</b></div>
+            <div class="pill" style="background: transparent;">CORRECT <b id="correctMoves">0</b></div>
+            <div class="pill" style="background: transparent;">WRONG <b id="wrongMoves">0</b></div>
+          </div>
+        </footer>
+        <div id="modal">
+          <div class="card">
+            <div class="big" id="modalIcon">💡</div>
+            <h1 id="modalTitle">Circuit complete!</h1>
+            <p id="modalText"></p>
+            <p id="modalStats" class="modal-stats"></p>
+            <div class="modal-actions">
+              <button class="btn primary" id="next">NEXT LEVEL →</button>
+              <button class="btn secondary" id="modal-back-home" type="button">RETURN TO MENU</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="supabase-config.js"></script>
+<script src="wirecraft script.js"></script>
+</body>
+</html>
